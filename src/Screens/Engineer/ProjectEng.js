@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndiccator, ImageBackground, StyleSheet, Image, Dimensions, TouchableOpacity,ActivityIndicator, TextInput, SafeAreaView, ScrollView } from 'react-native'
+import { ActivityIndiccator, ImageBackground, StyleSheet, Image, Dimensions, TouchableOpacity, TextInput, SafeAreaView, ScrollView } from 'react-native'
 import { View, Text, Item, Input, Button, Container, Content, Card, Form, Label, FooterTab, Footer, Icon, Header, Left, List, ListItem, Body, Right ,Title,Subtitle} from 'native-base'
 
 import bgimage from '../../../Images/icon++.png'
@@ -16,23 +16,16 @@ import axios from 'axios'
 
 
 const { width: WIDTH } = Dimensions.get('window')
-class ListP extends Component {
+class ProjectEng extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      project: [],
-      isLoading: true,
+      project: []
     }
   }
 
   componentDidMount() {
     this._getProject()
-    this.subs = [
-      this.props.navigation.addListener('willFocus', () => {
-        this.setState({isLoading: false})
-        this._getProject()
-      })
-    ]
   }
 
   _getProject = async () => {
@@ -41,36 +34,31 @@ class ListP extends Component {
       const auth = await axios.get('http://192.168.0.108:4000/myhire/readproject')
       console.log(auth.data.result);
       await this.setState({
-        project: auth.data.result,isLoading: false
-            })
+        project: auth.data.result
+      })
     } catch (error) {
       console.log(error);
     }
   }
 
-  _changeDone = async (id, done) => {
-    try {
+  _changeStatus = async(id, status) =>{
+    try{
       console.log(id);
-
+      
       axios.defaults.headers.common['Authorization'] = this.props.token;
-      const auth = await axios.put('http://192.168.0.108:4000/myhire/doneproject',
+      const auth = await axios.put('http://192.168.0.108:4000/myhire/statusproject',
         {
-          id: id,
-          done: (done) ? 0 : 1
+          id,
+          status 
         }
       )
       this._getProject()
-    } catch (error) {
-      console.log(error);
+    }catch(error){
+        console.log(error);
     }
   }
   render() {
-    const { project, isLoading } = this.state;
-    if(isLoading){
-      return(
-          <ActivityIndicator size='large' style={{flex: 1, backgroundColor: '#f5f5f5', opacity: 0.5}} color='#3F51B5' />
-      )
-  }
+    const { project } = this.state;
     if (!project.length) {
       return (
         <Container>
@@ -94,19 +82,7 @@ class ListP extends Component {
                   
             </View>
           </Content>
-          <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => { this.props.navigation.navigate('addProject') }}
-          style={styles.TouchableOpacityStyle}>
-          <Image
-            //We are making FAB using TouchableOpacity with an image
-            //We are using online image here
-            source={bgimage}
-            //You can use you project image Example below
-            //source={require('./images/float-add-icon.png')}
-            style={styles.FloatingButtonStyle}
-          />
-        </TouchableOpacity>
+          
         <Footer>
           <FooterTab>
             <Button vertical onPress={() => this.props.navigation.navigate('Index')}>
@@ -133,73 +109,56 @@ class ListP extends Component {
           <Left />
           <Body>
             <Title style={{ alignSelf: 'center' }}>List Project</Title>
-            <Subtitle style={{ alignSelf: 'center', fontSize: 20 }}>Company</Subtitle>
+            <Subtitle style={{ alignSelf: 'center', fontSize: 20 }}>Engineer</Subtitle>
 
           </Body>
           <Right />
         </Header>
-       
         <Content>
-          <List style={{ marginTop: 20, marginBottom: 50 }}>
-
-            <Card style={{borderRadius:20}}>
-              {
+          <List style={{marginTop:20, borderRadius:10}}>
+            {
                 project.map((data, index) => (
                   <ListItem key={index}>
                     <Body>
-                      <Text>{data.name}</Text>
-                      <Text>{data.budget}</Text>
-                      <Text note>id engineer :{data.id_engineer}</Text>
-                      <Text note>id company :{data.id_company}</Text>
+                      <Text style={{margin: 15}}>{data.name}</Text>
+                      <Text note>Rp.{data.budget}</Text>
                     </Body>
-                    <Right>
-                      {/* {
-                        (data.done != '1') ?
-                          <Button style={{ marginBottom: 10, borderRadius: 5,backgroundColor:'#5454' }}
-                            onPress={() => { this._changeDone(data.id, 1) }}
+                    <View>
+                    
+                    { 
+                          (!data.status)&&
+                          <Button      
+                          onPress={() => {this._changeStatus(data.id, 1)}}
+                          style={{backgroundColor:"blue", width:100, height: 30, justifyContent:"center", borderRadius: 10, margin: 2}}
+                        >
+                        <Text>Accept</Text>
+                        </Button>
+                    }
+                    {
+                        (!data.status)&&
+                          <Button      
+                            onPress={() => {this._changeStatus(data.id, 2)}}
+                            style={{backgroundColor:"red", width:100, height: 30, justifyContent:"center", borderRadius: 10, margin: 2}} 
                           >
-                            <Text style={{color:'black'}}>On Prog</Text>
-                            
+                          <Text>Decline</Text>
                           </Button>
-                          :
-                          <Button style={{ marginBottom: 5 }}
-                            onPress={() => { this._changeDone(data.id, 0) }}
-                          >
-                            <Text>Done</Text>
-                          </Button>
-                      } */}
-                     {
-
+                    }
+                    {
+                        (data.status === 1)&&
+                          <Icon name="paper-plane" style={{margin: 2, fontSize:20, color:"blue"}}></Icon>
+                    }
+                    {
+                        (data.status === 2)&&
+                        <Icon name="refresh" style={{margin: 2, fontSize:20, color:"red"}}></Icon>
                         
-((data.id_engineer !== null)&&(data.status === 0))&&
-<Text note style={{borderRadius: 3, textAlign: "center", backgroundColor: '#FFC300', color: 'black', width: 80, height:20, position:"absolute", alignSelf:"center", right:0}}>On Process</Text> 
-}
-{
-(data.status === 1)&&
-  <Text note style={{borderRadius: 3, textAlign: "center",backgroundColor: 'green', color: 'white', width: 70, height:20, position:"absolute", alignSelf:"center", right:0}}>Accept</Text>
-}
-                    </Right>
+                    }
+                    </View>
                   </ListItem>
                 ))
-              }
-            </Card>
-
+            }
           </List>
-
         </Content>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => { this.props.navigation.navigate('addProject') }}
-          style={styles.TouchableOpacityStyle}>
-          <Image
-            //We are making FAB using TouchableOpacity with an image
-            //We are using online image here
-            source={bgimage}
-            //You can use you project image Example below
-            //source={require('./images/float-add-icon.png')}
-            style={styles.FloatingButtonStyle}
-          />
-        </TouchableOpacity>
+        
         <Footer>
           <FooterTab>
             <Button vertical onPress={() => this.props.navigation.navigate('Index')}>
@@ -292,4 +251,4 @@ const mapDispatchToProps = (dispatch) => {
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListP)
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectEng)

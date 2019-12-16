@@ -1,50 +1,67 @@
 import React, { Component } from 'react'
 import { ActivityIndiccator, ImageBackground, StyleSheet, Image, Dimensions,TouchableOpacity , TextInput } from 'react-native'
-import { View, Text,Item,Input, Button, Container, Content, Card } from 'native-base'
+import { View, Text, Form, Item, Picker,Icon } from 'native-base'
 
 import bgimage from '../../../Images/Rgg.png'
 import logo from '../../../Images/arkademy.png'
 import { } from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/Ionicons'
+import axios from 'axios'
 
 const { width: WIDTH } = Dimensions.get('window')
 class Register extends Component {
-    constructor () {
-        super()
-        this.state = { 
+    constructor(props) {
+        super(props)
+        this.state = {
             username: '',
             password: '',
-            category: '0',
-            isLoading: true,
-       
+            category: '',
+            selected2: undefined,
+            nameValidate: true
+        };
+    }
+    _sendProject = async () => {
+        console.warn(this.state.selected2);
+        
+        isLogin = 0;
+        try {
+            const auth = await axios.post('http://192.168.0.108:4000/myhire/regis',
+                {
+                    username: this.state.username,
+                    password: this.state.password,
+                    category: this.state.selected2,
+                    
+                }
+            )
+            await this.props.navigation.navigate('Home')
+        } catch (error) {
+            console.log(error);
+            await this.props.navigation.navigate('Register')
+
         }
     }
 
-    addRwgis = async () => {
-        try {
-            const response = await axios({
-              method: 'post',
-              url: 'http://localhost:4000/myhire/regis',
-              data: {
-                username: this.state.username,
-                password: this.state.password,
-                category: this.state.category
-              }
+    onValueChange2(value) {
+        if (value !== 'x') {
+            this.setState({
+              selected2: value
             });
-            axios.defaults.headers.common['Authorization'] = response.data.result.token;
-            localStorage.setItem("Authorization", response.data.result.token);
-            console.log(response.data.result.token);
-            this.setState({
-              isChange: '1',
-              values: this.state.category
-            })
-          } catch (error) {
-            console.log(error);
-            this.setState({
-              isChange: '2'
-            })
+           
           }
       }
+
+    //   validate(text,type) {
+    //       alph=/^[a-zA-Z]+$/
+    //       if(type=='username')
+    //       {
+    //           if(alph.test(text))
+    //           {
+    //               this.setState({nameValidate: true})
+    //           } else 
+    //           {
+    //             this.setState({nameValidate: false})
+    //           }
+    //       }
+    //   }
    
     render () {
         const { isLoading, data, username, password, category } = this.state
@@ -64,11 +81,11 @@ class Register extends Component {
                 <View style={styles.inputContainer}>
                 
                     <TextInput
-                    style={styles.input}
+                    style={[styles.input,!this.state.nameValidate? styles.error:null]}
                         placeholder={'Username/Email'}
                         placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
                         underlineColorAndroid='transparent'
-                        onChangeText={value => this.setState({username: value})}/>
+                        onChangeText={value => this.setState({ username: value })}/>
                 </View>
                 <View style={styles.inputContainer}>
                 
@@ -79,7 +96,7 @@ class Register extends Component {
                         underlineColorAndroid='transparent'
                         onChangeText={value => this.setState({password: value})}/>
                     </View>
-                    <View style={styles.inputContainer}>
+                    {/* <View style={styles.inputContainer}>
                 
                 <TextInput
                 style={styles.input}
@@ -87,14 +104,39 @@ class Register extends Component {
                     placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
                     underlineColorAndroid='transparent'
                     onChangeText={value => this.setState({category: value})}/>
-                   </View>
+                   </View> */}
+
+                   
+            <Item 
+            picker style={styles.picker}
+            >
+              <Picker
+                mode="dropdown"
+                iosIcon={<Icon name="arrow-down" />}
+                style={{ width: undefined }}
+                placeholder="Select your SIM"
+                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderIconColor="#007aff"
+                selectedValue={this.state.selected2}
+                onValueChange={this.onValueChange2.bind(this)}
+
+                required
+              >
+                  <Picker.Item label="Choose Category" value="x"  />
+                  <Picker.Item label="Engineer" value="0" />
+                  <Picker.Item label="Company" value="1" />
+                
+                
+              </Picker>
+            </Item>
+          
                                      
                     
-                    <TouchableOpacity onPress={() => this.addRwgis()} style={styles.btnLogin}>
+                    <TouchableOpacity onPress={() => { this._sendProject(this.state.selected2) }} style={styles.btnLogin}>
                         <Text style={styles.Text}>Register</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={styles.btnRegister} >
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={styles.btnRegister} >
                         <Text style={styles.Textt}>Login</Text>
                     </TouchableOpacity>
                    
@@ -118,15 +160,16 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     logo: {
-        width: 120,
-        height: 120,
-        marginBottom: 50
+        width: 150,
+        height: 150,
+        marginBottom: 20
          },
     logoText: {
         color:'black',
         fontSize: 30,
         fontWeight: '500',
         marginTop: 10,
+        marginBottom:50
         // opacity: 0.5
     },
     input: {
@@ -138,6 +181,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.35)',
         color: 'rgba(255, 255, 255, 0.7)',
         marginHorizontal: 25,
+    },
+    picker: {
+        width:WIDTH -55,
+        height: 45,
+        borderRadius: 25,
+        fontSize: 16,
+        paddingLeft: 45,
+        backgroundColor: 'rgba(0, 0, 0, 0.35)',
+        color: 'rgba(255, 255, 255, 0.7)',
+        marginHorizontal: 0,
+        marginTop:10
     },
     itemLine: {
         width:WIDTH -65,
@@ -164,7 +218,7 @@ const styles = StyleSheet.create({
         right: 37
     },
     btnLogin: {
-        width: WIDTH -55,
+        width: WIDTH -205,
         height: 45,
         borderRadius: 25,
         backgroundColor: '#432577',
@@ -188,6 +242,10 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 16,
         textAlign: 'center'
+    },
+    error: {
+        borderWidth:3,
+        borderColor: 'red'
     }
     
 })

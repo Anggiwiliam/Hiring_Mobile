@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ActivityIndiccator, ImageBackground, StyleSheet, Image, Dimensions, TouchableOpacity, TextInput, SafeAreaView, ScrollView } from 'react-native'
-import { View, Text, Item, Input, Button, Container, Content, Card, Form, Label, FooterTab, Footer, Icon } from 'native-base'
+import { View, Text, Item, Input, Button, Container, Content, Card, Form, Label, FooterTab, Footer, Icon, Header, Left, Right, Body, Subtitle, Title } from 'native-base'
 
 import bgimage from '../../../Images/Rgg.png'
 import logo from '../../../Images/arkademy.png'
@@ -32,7 +32,7 @@ class Detail extends Component {
     async getMyData() {
         try {
             axios.defaults.headers.common['Authorization'] = this.props.token;
-            const profile = await axios.get(`http://192.168.1.5:4000/engineer/by/${this.props.id}`)
+            const profile = await axios.get(`http://192.168.0.108:4000/engineer/by/${this.props.id}`)
             console.log(profile.data[0]);
 
             await this.setState({
@@ -49,17 +49,29 @@ class Detail extends Component {
         return (
 
             <Container>
+                <Header>
+                    <Button transparent>
+                        <Icon name='arrow-back' onPress={() => this.props.navigation.goBack()} />
+                    </Button>
+                    <Left />
+                    <Body>
+                        <Title style={{ alignSelf: 'center' }}>Detail</Title>
+                        <Subtitle style={{ alignSelf: 'center', fontSize: 20 }}>Engineer</Subtitle>
+
+                    </Body>
+                    <Right />
+                </Header>
                 <SafeAreaView style={styles.container}>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View style={styles.titlebar}>
-                            <Icon name="arrow-back" onPress={() => this.props.navigation.goBack()}></Icon>
+
                         </View>
                         <View style={{ alignSelf: "center" }}>
                             <View style={styles.profileimage}>
-                                <Image source={{ uri: `http://192.168.1.5:4000/myhire/file/${this.state.Detaill.photo}` }} style={styles.image} resizeMode="center"></Image>
+                                <Image source={{ uri: `http://192.168.0.108:4000/myhire/file/${this.state.Detaill.photo}` }} style={styles.image} resizeMode="center"></Image>
                             </View>
-                            <Icon name="add" onPress={() => this.props.navigation.navigate('Hiring')}>Hire</Icon>
-                            
+
+
                         </View>
                         <View style={styles.infocontainer}>
                             <Text style={[styles.text, { fontWeight: '200', fontSize: 36 }]}>{this.state.Detaill.name}</Text>
@@ -71,17 +83,20 @@ class Detail extends Component {
                             <Text style={[styles.text, { color: '#AEB5BC', fontSize: 20 }]}>{this.state.Detaill.skill}</Text>
                             <Text style={[styles.text, { color: '#AEB5BC', fontSize: 20 }]}>{this.state.Detaill.description}</Text>
                         </View>
-                        
+                        <Button style={{ alignSelf: 'center', marginTop: 10, borderRadius: 10 }} onPress={() => this.props.navigation.navigate('Hiring')}>
+                            <Text>Hire Me</Text>
+                        </Button>
                     </ScrollView>
+
                 </SafeAreaView>
-                   
+
                 <Footer>
                     <FooterTab>
                         <Button vertical onPress={() => this.props.navigation.navigate('Index')}>
                             <Icon name="home" />
                             <Text>Home</Text>
                         </Button>
-                        
+
                         <Button vertical active onPress={() => this.props.navigation.navigate('ProfilC')}>
                             <Icon name="person" />
                             <Text>Profil</Text>
@@ -123,7 +138,8 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 100,
-        overflow: "hidden"
+        overflow: "hidden",
+        borderColor: 'black'
     },
     infocontainer: {
         alignSelf: 'center',

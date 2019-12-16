@@ -17,6 +17,8 @@ import Hiring from '../Screens/Company/Hiring'
 import addProject from '../Screens/Company/addProject'
 import ListP from '../Screens/Company/Listproject'
 import Project from '../Screens/Company/Project'
+import Log from '../Screens/Login/Logout'
+import ProjectEng from '../Screens/Engineer/ProjectEng'
 
 
 const HomeNavigation = createStackNavigator({
@@ -34,7 +36,9 @@ const HomeNavigation = createStackNavigator({
     Hiring,
     addProject,
     ListP,
-    Project
+    Project,
+    Log,
+    ProjectEng
     
 }, {
   headerMode: 'none',

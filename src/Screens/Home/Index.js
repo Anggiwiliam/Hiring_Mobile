@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right, View, Item ,Title,Footer, FooterTab,Input} from 'native-base';
 
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import { increaseCounter, descreaseCounter } from '../../../redux/actions/counte
 import { getEngineer } from '../../../redux/actions/engineerActions'
 import { jwt } from '../../../redux/actions/tokenAction'
 import axios from 'axios'
+import { FlatGrid } from 'react-native-super-grid';
 
 class Home extends Component {
     constructor () {
@@ -15,26 +16,48 @@ class Home extends Component {
         this.state = {
           isLoading: true,
           items: [],
-          search: ''
+          search: '',
+          data: [],
         }
       }
     
       componentDidMount() {
-        axios.get(`http://192.168.1.5:4000/engineer/read`)
+        axios.get(`http://192.168.0.108:4000/engineer/read`)
           .then(res => {
-            console.log(res);
-            this.setState({ items: res.data });
+            // console.warn(res.data);
+            this.setState({ data: res.data , isLoading: false});
           });
       }
+
+      // componentDidMount() {
+      //   this.getData()
+        
+      //   this.subs = [
+      //     this.props.navigation.addListener('willFocus', () => {
+      //       this.setState({isLoading: false})
+      //       this.getData()
+      //     })
+      //   ]
+      // }
+    
+      // getData = async () => {
+      //   try {
+      //     const result = await axios.get('http://192.168.0.108:4000/engineer/read')
+      //     console.log(result.data)
+      //     this.setState({data: result.data.result, isLoading: false})
+      //   } catch (error) {
+      //     console.log(error)
+      //   }
+      // }
 
       _sendLogout = async () => {
         isLogin = 0; 
         console.log(this.props.token);
         
         try{
-            Axios.defaults.headers.common['Authorization'] = this.props.token;
-            await Axios.get('http://192.168.1.5:4000/myhire/logout')
-            Axios.defaults.headers.common['Authorization'] = '0';
+            axios.defaults.headers.common['Authorization'] = this.props.token;
+            await axios.get('http://192.168.0.108:4000/myhire/logout')
+            axios.defaults.headers.common['Authorization'] = '0';
             await this.props.reduxLogin(false)
             await this.props.navigation.navigate('Home')
         }catch(error){
@@ -54,9 +77,9 @@ class Home extends Component {
           const search = this.state.search
           console.log(search);
           
-          const result = await axios.get(`http://192.168.1.5:4000/myhire/search/?skill=${search}`)
+          const result = await axios.get(`http://192.168.0.108:4000/myhire/search/?skill=${search}`)
           console.log(result.data.result);
-          this.setState({data: result.data.result, isLoading: false})
+          this.setState({data: result.data.result})
       } catch (error) {
           console.log(error);
       }
@@ -65,7 +88,13 @@ class Home extends Component {
        
   render() {
     const { items } = this.state
+    const { data, isLoading } = this.state
     console.log(this.props.category);
+    if(isLoading){
+      return(
+          <ActivityIndicator size='large' style={{flex: 1, backgroundColor: '#f5f5f5', opacity: 0.5}} color='#3F51B5' />
+      )
+  }  
     return (
       <Container>
            <Header searchBar rounded
@@ -83,7 +112,7 @@ class Home extends Component {
              
              (this.props.loggedIn)&&
              <Left>
-               <Button
+               <Button 
                 onPress = {()=>this.searchSkill()}
                >
                   <Text>Search</Text>
@@ -93,10 +122,29 @@ class Home extends Component {
            }
             
         </Header> 
-        <ScrollView>
+    
         <Content>
+        <FlatGrid
+              itemDimension={130}
+              items={data}
+              style={styles.gridView}
+              renderItem={({ item, index }) => (
+                  <TouchableOpacity style={styles.itemContainer} onPress={() => {this._setIdEngineer(item.created_by) } }>
+                      <Image source={{ uri: `http://192.168.0.108:4000/myhire/file/${item.photo}` }} style={{ flex: 1, borderRadius: 5 }} />
+                      <View style={styles.name} >
+                          <Text style={{ color: '#fff', fontSize:20}}>{item.name}</Text>
+                          <Text style={{ color: '#fff' }}>{item.skill}</Text>
+                          
+                          
+                         
+                      </View>
+                  </TouchableOpacity>
+              )}
+          />
+          {/* <FlatGrid>
+          itemDimension={130}
         {items.map(product => (
-          <Card style={{padding: 5, elevation: 0, borderRadius: 10}} key={product.id}>
+          <Card style={{ borderRadius: 10}} key={product.id}>
          
             <CardItem>
               <Left>
@@ -104,21 +152,35 @@ class Home extends Component {
                 <Body>
                   <Text>{product.name}</Text>
                   <Text note>{product.skill}</Text>
-                  <Image source={{uri:`http://192.168.1.5:4000/myhire/file/` + product.photo }} style={{height: 150, width: 150, flex: 100}}/>
-            
+                  <TouchableOpacity onPress={() => {this._setIdEngineer(product.created_by)}}>
+                  <Image source={{uri:`http://192.168.0.108:4000/myhire/file/` + product.photo }} style={{height: 150, width: 150, flex: 100}}/>
+                  </TouchableOpacity>
                 </Body>
-                <Button onPress={() => {this._setIdEngineer(product.created_by)}}>
-                    <Icon name="eye" /> 
-                    
-                    </Button>
-              </Left>
+               </Left>
             </CardItem>
           
             
           </Card>
+          
           ))}
+        </FlatGrid> */}
         </Content>
-        </ScrollView>
+        
+        {
+          (!this.props.loggedIn)?
+          <Footer>
+            <FooterTab>
+              <Button full onPress={() => this.props.navigation.navigate('Home')}>
+                <Text>Login</Text>
+              </Button>
+            </FooterTab>
+            <FooterTab>
+              <Button full onPress={() => this.props.navigation.navigate('Register')}>
+                <Text>Sign Up</Text>
+              </Button>
+            </FooterTab>
+          </Footer>
+          :
         <Footer>
           <FooterTab>
             <Button vertical active onPress={() => this.props.navigation.navigate('Index')}>
@@ -126,7 +188,7 @@ class Home extends Component {
               <Text>Home</Text>
             </Button>
             <Button vertical onPress={() =>
-                  this.props.navigation.navigate('ListP')
+                  this.props.navigation.navigate('ProjectEng')
                 }>
               <Icon name="list" />
               <Text>Project</Text>
@@ -141,17 +203,52 @@ class Home extends Component {
             </Button>
           </FooterTab>
         </Footer>
+  }
       </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  gridView: {
+    marginTop: 20,
+      flex: 1,
+  },
+  name: {
+      width:'100%',
+      position: 'absolute',
+      color: '#fff',
+      backgroundColor: "rgba(0, 0, 0, 0.7)" ,
+      paddingLeft: 5,
+      paddingBottom: 10
+      
+  },
+
+  itemContainer: {
+      justifyContent: 'flex-end',
+      borderRadius: 100,
+      height: 200,
+      position: 'relative'
+  },
+  itemName: {
+      fontSize: 16,
+      color: '#fff',
+      fontWeight: '600',
+  },
+  itemCode: {
+      fontWeight: '600',
+      fontSize: 12,
+      color: '#fff',
+  },
+});
 
 const mapStateToProps = (state) => {
   return {
       counter: state.counterReducer.counter,
       loggedIn: state.authReducer.loggedIn,
       token: state.tokenReducer.token,
-      engineerList: state
+      engineerList: state,
+      id: state.engineerReducer.id,
   };
 };
 

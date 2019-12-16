@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { ActivityIndiccator, ImageBackground, StyleSheet, Image, Dimensions,TouchableOpacity , TextInput } from 'react-native'
-import { View, Text,Item,Input, Button, Container, Content, Card,Form , Label} from 'native-base'
+import { ActivityIndiccator, ImageBackground, StyleSheet, Image, Dimensions, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, Item, Input, Button, Container, Content, Card, Form, Label, FooterTab, Footer, Icon, Header, Left, Body, Right,Title,Subtitle } from 'native-base'
 
 import bgimage from '../../../Images/Rgg.png'
 import logo from '../../../Images/arkademy.png'
 import { } from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/Ionicons'
+
 
 import { connect } from "react-redux";
 import { login } from '../../../redux/actions/authActions'
@@ -17,9 +17,9 @@ import axios from 'axios'
 
 const { width: WIDTH } = Dimensions.get('window')
 class addProject extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
+        this.state = {
             name: '',
             skill: '',
             description: '',
@@ -29,55 +29,80 @@ class addProject extends Component {
         }
     }
     _sendProject = async () => {
-        isLogin = 0; 
-        try{
-          const auth = await axios.post('http://192.168.1.5:4000/myhire/createproject',
-              {
+        isLogin = 0;
+        try {
+            const auth = await axios.post('http://192.168.0.108:4000/myhire/createproject',
+                {
                     name: this.state.name,
                     skill: this.state.skill,
                     description: this.state.description,
                     budget: this.state.budget
-              }
-          )
-          await this.props.navigation.navigate('ListP')
-        }catch(error){
+                }
+            )
+            await this.props.navigation.navigate('ListP')
+        } catch (error) {
             console.log(error);
 
         }
     }
-   
-    render () {
+
+    render() {
 
         return (
-            
-        <Container>
-        
-        <Content>
-            <Text style={styles.Text}>Form Project Company </Text>
-        <Form>
-            <Item floatingLabel last style={styles.input}>
-              <Label>Name Project</Label>
-              <Input onChangeText={value => this.setState({name: value})}/>
-            </Item>
-            <Item floatingLabel last style={styles.input}>
-              <Label>Skill</Label>
-              <Input onChangeText={value => this.setState({skill: value})} />
-            </Item>
-            <Item floatingLabel last style={styles.input}>
-              <Label>Budget</Label>
-              <Input onChangeText={value => this.setState({budget: value})}/>
-            </Item>
-            <Item floatingLabel last style={styles.input}>
-              <Label>Description</Label>
-              <Input onChangeText={value => this.setState({description: value})} />
-            </Item>
-            <Button rounded onPress={()=>{this._sendProject()}} style={styles.btnCompany} >
-            <Text>Save</Text>
-          </Button>
-          </Form>
-        </Content>
-      </Container>
-            
+
+            <Container>
+                <Header>
+                    <Button transparent>
+                        <Icon name='arrow-back' onPress={() => this.props.navigation.goBack()} />
+                    </Button>
+                    <Left />
+                    <Body>
+                        <Title style={{ alignSelf: 'center' }}>Form Project</Title>
+                    </Body>
+                    <Right />
+                </Header>
+                <Content>
+
+                    
+                    <Form>
+                        <Item floatingLabel last style={styles.input}>
+                            <Label>Name Project</Label>
+                            <Input onChangeText={value => this.setState({ name: value })} />
+                        </Item>
+                        <Item floatingLabel last style={styles.input}>
+                            <Label>Skill</Label>
+                            <Input onChangeText={value => this.setState({ skill: value })} />
+                        </Item>
+                        <Item floatingLabel last style={styles.input}>
+                            <Label>Budget</Label>
+                            <Input onChangeText={value => this.setState({ budget: value })} />
+                        </Item>
+                        <Item floatingLabel last style={styles.input}>
+                            <Label>Description</Label>
+                            <Input onChangeText={value => this.setState({ description: value })} />
+                        </Item>
+                        <Button rounded onPress={() => { this._sendProject() }} style={styles.btnCompany} >
+                            <Text>Save</Text>
+                        </Button>
+                    </Form>
+                </Content>
+
+                <Footer>
+                    <FooterTab>
+                        <Button vertical onPress={() => this.props.navigation.navigate('Index')}>
+                            <Icon name="home" />
+                            <Text>Home</Text>
+                        </Button>
+
+                        <Button vertical active onPress={() => this.props.navigation.navigate('addProject')}>
+                            <Icon name="person" />
+                            <Text>Add</Text>
+                        </Button>
+                    </FooterTab>
+                </Footer>
+
+            </Container>
+
         )
     }
 
@@ -99,31 +124,31 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         marginBottom: 50
-         },
+    },
     logoText: {
-        color:'black',
+        color: 'black',
         fontSize: 30,
         fontWeight: '500',
         marginTop: 10,
         // opacity: 0.5
     },
     input: {
-        width:WIDTH -65,
+        width: WIDTH - 65,
         height: 45,
         marginBottom: 5,
         fontSize: 10,
         left: 30,
     },
     itemLine: {
-        width:WIDTH -65,
+        width: WIDTH - 65,
         height: 45,
         marginBottom: 10,
         fontSize: 16,
         left: 30,
-        
-        
+
+
         color: 'rgba(255, 255, 255, 0.7)',
-     
+
     },
     inputIcon: {
         position: 'absolute',
@@ -139,24 +164,24 @@ const styles = StyleSheet.create({
         right: 37
     },
     Save: {
-        width: WIDTH -55,
+        width: WIDTH - 55,
         justifyContent: 'center',
         marginTop: 20
     },
     btnLogin: {
-        width:WIDTH -65,
+        width: WIDTH - 65,
         height: 45,
         marginBottom: 5,
         fontSize: 10,
         left: 30,
     },
     btnCompany: {
-        width:WIDTH -65,
+        width: WIDTH - 65,
         height: 45,
         marginBottom: 5,
         fontSize: 10,
         left: 30,
-        
+
         justifyContent: 'center',
         marginTop: 40
     },
@@ -171,7 +196,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center'
     }
-    
+
 })
 
 const mapStateToProps = (state) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ActivityIndiccator, ImageBackground, StyleSheet, Image, Dimensions,TouchableOpacity , TextInput,SafeAreaView,ScrollView } from 'react-native'
-import { View, Text,Item,Input, Button, Container, Content, Card,Form , Label, FooterTab,Footer, Icon} from 'native-base'
+import { View, Text,Item,Input, Button, Container, Content, Card,Form , Label, FooterTab,Footer, Icon, Header,Left,Right,Title,Subtitle,Body} from 'native-base'
 
 import bgimage from '../../../Images/Rgg.png'
 import logo from '../../../Images/arkademy.png'
@@ -23,6 +23,16 @@ class Profile extends Component {
         return (
             
         <Container>
+             <Header>
+                    <Button transparent>
+                        <Icon name='arrow-back' onPress={() => this.props.navigation.goBack()} />
+                    </Button>
+                    <Left />
+                    <Body>
+                        <Title style={{ alignSelf: 'center' }}>Profil</Title>
+                    </Body>
+                    <Right />
+                </Header>
         <SafeAreaView style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.titlebar}>
@@ -44,6 +54,9 @@ class Profile extends Component {
                         <Text style={[styles.text,{color:'#AEB5BC', fontSize:16}]}>Smart</Text>
                         <Text style={[styles.text,{color:'#AEB5BC', fontSize:16}]}>www.github.com/Anggiwiliam</Text>
                     </View>
+                    <Button style={{ alignSelf: 'center', marginTop: 20, borderRadius: 10 }} onPress={() => this.props.navigation.navigate('ListP')}>
+                            <Text>List Project</Text>
+                        </Button>
                     
                 </ScrollView>
             </SafeAreaView>   
@@ -53,14 +66,7 @@ class Profile extends Component {
               <Icon name="home" />
               <Text>Home</Text>
             </Button>
-            <Button vertical>
-              <Icon name="camera" />
-              <Text>Camera</Text>
-            </Button>
-            <Button vertical >
-              <Icon active name="navigate" />
-              <Text>Navigate</Text>
-            </Button>
+        
             <Button vertical active onPress={() => this.props.navigation.navigate('ProfilC')}>
               <Icon name="person" />
               <Text>Profil</Text>

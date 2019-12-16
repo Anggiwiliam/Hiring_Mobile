@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: '500',
         marginTop: 10,
-        opacity: 0.5
+        opacity: 0.9,
+        marginBottom:50
     },
     input: {
         width: WIDTH - 55,
@@ -50,14 +51,15 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         fontSize: 16,
         paddingLeft: 45,
-        backgroundColor: 'rgba(0, 0, 0, 0.35)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         color: 'rgba(255, 255, 255, 0.7)',
         marginHorizontal: 25,
     },
     inputIcon: {
         position: 'absolute',
         top: 8,
-        left: 37
+        left: 37,
+        color:'white'
     },
     inputContainer: {
         marginTop: 10
@@ -65,10 +67,11 @@ const styles = StyleSheet.create({
     btnEye: {
         position: 'absolute',
         top: 8,
-        right: 37
+        right: 37,
+        color:'white'
     },
     btnLogin: {
-        width: WIDTH - 55,
+        width: WIDTH - 205,
         height: 45,
         borderRadius: 25,
         backgroundColor: '#432577',
@@ -114,7 +117,7 @@ class Home extends React.Component {
     _sendLogin = async () => {
         isLogin = 0;
         try{
-            const auth = await axios.post('http://192.168.1.5:4000/myhire/login',
+            const auth = await axios.post('http://192.168.0.108:4000/myhire/login',
             {
                 username: this.state.username,
                 password: this.state.password
@@ -154,8 +157,11 @@ class Home extends React.Component {
                         name='username'
                         onChangeText={value => this.setState({username: value})} />
                 </View>
+                <View>
+                    
+                </View>
                 <View style={styles.inputContainer}>
-                    <Icon name="apps" size={28} color={'rgba(255, 255, 255, 0.7)'} style={styles.inputIcon} />
+                    <Icon name="apps" size={28} color={'rgba(255, 255, 255, 0.8)'} style={styles.inputIcon} />
                     <TextInput
                         style={styles.input}
                         placeholder={'Password'}
@@ -165,7 +171,7 @@ class Home extends React.Component {
                         onChangeText={value => this.setState({password: value})} />
                     <TouchableOpacity style={styles.btnEye}
                         onPress={this.showPass.bind(this)}>
-                        <Icon name={this.state.press == false ? "eye" : "eye"} size={26} color={'rgba(255, 255, 255, 0.7)'} />
+                        <Icon name={this.state.press == false ? "eye" : "eye"} size={26} />
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.btnLogin} onPress={() => {this._sendLogin()}} onPress={() => this._sendLogin()}>
