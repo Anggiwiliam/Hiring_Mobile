@@ -30,7 +30,7 @@ class Hiring extends Component {
   _getProject = async () => {
     try {
       axios.defaults.headers.common['Authorization'] = this.props.token;
-      const auth = await axios.get('http://192.168.0.108:4000/myhire/readproject')
+      const auth = await axios.get('http://35.170.248.238:7000/myhire/readproject')
       console.log(auth.data.result);
       await this.setState({
         project: auth.data.result
@@ -47,7 +47,7 @@ class Hiring extends Component {
     console.log(id);
     try {
       axios.defaults.headers.common['Authorization'] = this.props.token;
-      const auth = await axios.put('http://192.168.0.108:4000/myhire/changeproject',
+      const auth = await axios.put('http://35.170.248.238:7000/myhire/changeproject',
         {
           id: selected.id,
           done: selected.done,

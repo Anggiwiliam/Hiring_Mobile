@@ -24,7 +24,7 @@ class Register extends Component {
         
         isLogin = 0;
         try {
-            const auth = await axios.post('http://192.168.0.108:4000/myhire/regis',
+            const auth = await axios.post('http://35.170.248.238:7000/myhire/regis',
                 {
                     username: this.state.username,
                     password: this.state.password,

@@ -117,7 +117,7 @@ class Home extends React.Component {
     _sendLogin = async () => {
         isLogin = 0;
         try{
-            const auth = await axios.post('http://192.168.0.108:4000/myhire/login',
+            const auth = await axios.post('http://35.170.248.238:7000/myhire/login',
             {
                 username: this.state.username,
                 password: this.state.password

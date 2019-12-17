@@ -22,7 +22,7 @@ class Home extends Component {
       }
     
       componentDidMount() {
-        axios.get(`http://192.168.0.108:4000/engineer/read`)
+        axios.get(`http://35.170.248.238:7000/engineer/read`)
           .then(res => {
             // console.warn(res.data);
             this.setState({ data: res.data , isLoading: false});
@@ -42,7 +42,7 @@ class Home extends Component {
     
       // getData = async () => {
       //   try {
-      //     const result = await axios.get('http://192.168.0.108:4000/engineer/read')
+      //     const result = await axios.get('http://35.170.248.238:7000/engineer/read')
       //     console.log(result.data)
       //     this.setState({data: result.data.result, isLoading: false})
       //   } catch (error) {
@@ -56,7 +56,7 @@ class Home extends Component {
         
         try{
             axios.defaults.headers.common['Authorization'] = this.props.token;
-            await axios.get('http://192.168.0.108:4000/myhire/logout')
+            await axios.get('http://35.170.248.238:7000/myhire/logout')
             axios.defaults.headers.common['Authorization'] = '0';
             await this.props.reduxLogin(false)
             await this.props.navigation.navigate('Home')
@@ -77,7 +77,7 @@ class Home extends Component {
           const search = this.state.search
           console.log(search);
           
-          const result = await axios.get(`http://192.168.0.108:4000/myhire/search/?skill=${search}`)
+          const result = await axios.get(`http://35.170.248.238:7000/myhire/search/?skill=${search}`)
           console.log(result.data.result);
           this.setState({data: result.data.result})
       } catch (error) {
@@ -130,7 +130,7 @@ class Home extends Component {
               style={styles.gridView}
               renderItem={({ item, index }) => (
                   <TouchableOpacity style={styles.itemContainer} onPress={() => {this._setIdEngineer(item.created_by) } }>
-                      <Image source={{ uri: `http://192.168.0.108:4000/myhire/file/${item.photo}` }} style={{ flex: 1, borderRadius: 5 }} />
+                      <Image source={{ uri: `http://35.170.248.238:7000/myhire/file/${item.photo}` }} style={{ flex: 1, borderRadius: 5 }} />
                       <View style={styles.name} >
                           <Text style={{ color: '#fff', fontSize:20}}>{item.name}</Text>
                           <Text style={{ color: '#fff' }}>{item.skill}</Text>
@@ -153,7 +153,7 @@ class Home extends Component {
                   <Text>{product.name}</Text>
                   <Text note>{product.skill}</Text>
                   <TouchableOpacity onPress={() => {this._setIdEngineer(product.created_by)}}>
-                  <Image source={{uri:`http://192.168.0.108:4000/myhire/file/` + product.photo }} style={{height: 150, width: 150, flex: 100}}/>
+                  <Image source={{uri:`http://35.170.248.238:7000/myhire/file/` + product.photo }} style={{height: 150, width: 150, flex: 100}}/>
                   </TouchableOpacity>
                 </Body>
                </Left>

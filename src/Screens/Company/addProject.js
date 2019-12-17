@@ -31,7 +31,7 @@ class addProject extends Component {
     _sendProject = async () => {
         isLogin = 0;
         try {
-            const auth = await axios.post('http://192.168.0.108:4000/myhire/createproject',
+            const auth = await axios.post('http://35.170.248.238:7000/myhire/createproject',
                 {
                     name: this.state.name,
                     skill: this.state.skill,

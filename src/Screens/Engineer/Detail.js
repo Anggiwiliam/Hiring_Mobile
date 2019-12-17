@@ -32,7 +32,7 @@ class Detail extends Component {
     async getMyData() {
         try {
             axios.defaults.headers.common['Authorization'] = this.props.token;
-            const profile = await axios.get(`http://192.168.0.108:4000/engineer/by/${this.props.id}`)
+            const profile = await axios.get(`http://35.170.248.238:7000/engineer/by/${this.props.id}`)
             console.log(profile.data[0]);
 
             await this.setState({
@@ -68,7 +68,7 @@ class Detail extends Component {
                         </View>
                         <View style={{ alignSelf: "center" }}>
                             <View style={styles.profileimage}>
-                                <Image source={{ uri: `http://192.168.0.108:4000/myhire/file/${this.state.Detaill.photo}` }} style={styles.image} resizeMode="center"></Image>
+                                <Image source={{ uri: `http://35.170.248.238:7000/myhire/file/${this.state.Detaill.photo}` }} style={styles.image} resizeMode="center"></Image>
                             </View>
 
 
